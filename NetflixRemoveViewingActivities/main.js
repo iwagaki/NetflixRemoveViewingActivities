@@ -1,17 +1,34 @@
+var last_row_reactid = 0;
+
 function deleteNextActivity() {
-  if (document.getElementsByClassName('retableRow removing').length != 0) {
-    return;
+  if (last_row_reactid != 0) {
+    var rows = document.querySelectorAll('.retableRow.retableRemoved[data-reactid]');
+    var is_found = false;
+    for (var i = 0; i < rows.length; i++) {
+      row = rows[i];
+      if (row.dataset.reactid == last_row_reactid) {
+        if (row.getElementsByClassName('basic-spinner').length == 0) {
+          is_found = true;
+        }
+      }
+    }
+    if (!is_found) {
+      return;
+    }
   }
 
-  elements = document.getElementsByClassName('deleteBtn');
+  var elements = document.getElementsByClassName('deleteBtn');
   if (elements.length == 0) {
     return;
   }
 
-  console.log(elements);
-  elements[0].click();
+  // console.log(elements);
+  last_row_reactid = elements[0].parentElement.parentElement.dataset.reactid;
+  // console.log(last_row_reactid);
+
+  // elements[0].click();
+  setTimeout(function() { elements[0].click() }, 100);
 }
 
 document.addEventListener('DOMSubtreeModified', deleteNextActivity);
-
 deleteNextActivity();
